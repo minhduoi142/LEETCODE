@@ -1,0 +1,33 @@
+class Solution {
+public:
+vector<vector<int>> ans;
+void Check(vector<int> candidates, vector<int> curr, int target, int index, int sum)
+{
+    if (sum == target)
+    {
+        ans.push_back(curr);
+        return;
+    }
+    if( sum > target)
+    return;
+    for( int i = index; i < candidates.size(); i ++)
+    {
+        if( i > index && candidates[i] == candidates[i-1])
+        continue;
+        
+        curr.push_back(candidates[i]);
+
+        Check(candidates, curr, target, i +1, sum + candidates[i]);
+        curr.pop_back();
+    }
+}
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+
+         vector<int> curr;
+    sort(candidates.begin(), candidates.end());
+
+    Check(candidates, curr, target, 0, 0);
+    return ans;
+        
+    }
+};
