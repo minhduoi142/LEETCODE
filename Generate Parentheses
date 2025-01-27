@@ -1,0 +1,23 @@
+class Solution {
+public:
+void biendoi( int open, int close, string curr, vector<string> &ans)
+  {
+    
+    if( open == 0 && close == 0)
+    ans.push_back( curr);
+    if( open > 0)
+    biendoi( open -1, close, curr + "(", ans);
+    if( close > open)
+    biendoi( open, close -1, curr +")", ans);
+
+  }
+
+    vector<string> generateParenthesis(int n) {
+ 
+ vector<string> ans;
+
+biendoi( n, n, "", ans);
+return ans;
+        
+    }
+};
