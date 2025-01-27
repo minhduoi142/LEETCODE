@@ -1,0 +1,28 @@
+class Solution {
+public:
+void myletterscomb(string phonekey[],string digits,int i,string s, vector <string > &result)
+{
+
+    if(i==digits.size())
+    {
+        result.push_back(s);
+    return;
+
+    }
+    int number = digits[i]-'0';
+
+    for(int j=0;j<phonekey[number].size();j++)
+        myletterscomb( phonekey, digits, i+1, s+phonekey[number][j], result);
+}
+
+    vector<string> letterCombinations(string digits) {
+  
+
+        string phonekey[]={"","","abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+
+   vector <string> result;if(digits.size()==0) return result;
+   myletterscomb( phonekey, digits, 0 , "",  result);
+   return result;
+        
+    }
+};
