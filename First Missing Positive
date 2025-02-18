@@ -1,0 +1,39 @@
+class Solution
+{
+public:
+    int process(priority_queue<int, vector<int>, greater<int>> q)
+    {
+        int temp = 1;
+
+        while (q.top() <= 0 && q.empty() == 0)
+            q.pop();
+        if (q.empty() == 1)
+            return temp;
+        if (q.empty())
+            return temp;
+        int gan = q.top();
+        while (true)
+        {
+            if (q.empty() || temp != q.top())
+                return temp;
+            q.pop();
+            temp++;
+            if (q.top() == gan && q.empty() == 0)
+            {
+                temp--;
+            }
+            else
+                gan = q.top();
+        }
+    }
+
+    int firstMissingPositive(vector<int> &nums)
+    {
+        priority_queue<int, vector<int>, greater<int>> qu;
+
+        for (auto x : nums)
+            qu.push(x);
+
+        return process(qu);
+    }
+};
