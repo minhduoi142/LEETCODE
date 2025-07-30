@@ -1,0 +1,21 @@
+class Solution {
+public:
+    vector<vector<int>> combine(int n, int k) {
+        vector<int> a(n);
+        iota(a.begin(), a.end(), 1);
+
+        vector<int> bitmask(k, 1);
+        bitmask.resize(n, 0);
+
+        vector<vector<int>> ans;
+        do {
+            vector<int> temp;
+            for (int i = 0; i < n; ++i) {
+                if (bitmask[i]) temp.push_back(a[i]);
+            }
+            ans.push_back(temp);
+        } while (prev_permutation(bitmask.begin(), bitmask.end()));
+        
+        return ans;
+    }
+};
