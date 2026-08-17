@@ -1,18 +1,7 @@
-#include <bits/stdc++.h>
-#define endl "\n"
-#define int long long
-#define CODEGOD                       \
-    ios_base::sync_with_stdio(false); \
-    cin.tie(NULL);
-using namespace std;
-
-void solve()
-{
-
-    string s;
-    cin >> s;
-
-    int len = s.length();
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        int len = s.length();
 
     int maxLen = 0;
     string ans = "";
@@ -46,17 +35,6 @@ void solve()
         }
     }
 
-    cout << ans << endl;
-}
-
-signed main()
-{
-    CODEGOD;
-    int t = 1;
-    //  cin >> t;
-    while (t--)
-    {
-        /* code */
-        solve();
+    return ans;
     }
-}
+};
