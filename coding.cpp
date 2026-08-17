@@ -8,45 +8,52 @@ using namespace std;
 
 void solve()
 {
+    int target;
+    vector<int> nums;
 
-    string s;
-    cin >> s;
+    int n;
+    cin >> n;
+    cin >> target;
+    int minimal = INT_MAX;
 
-    int len = s.length();
-
-    int maxLen = 0;
-    string ans = "";
-
-    for (int i = 0; i < len; i++)
+    for (int i = 0; i < n; i++)
     {
+        int x;
+        cin >> x;
+        nums.push_back(x);
+    }
+        int len = nums.size();
 
-        int last = i;
-        int start = i;
-        int ok = 0;
+    int left = 0, right = 0;
+    int sum = 0;
 
-        while (s[last] == s[last + 1])
+    while (right < len)
+    {
+        
+
+        while (sum < target && right < len)
         {
-            last++;
-            ok = 1;
+            sum += nums[right];
+            // cout<<sum<<" ";
+            right++;
         }
-        while (start > 0 && last < len - 1 && s[start - 1] == s[last + 1])
-        {
-            start--;
-            last++;
-        }
-        if (maxLen < last - start + 1)
-        {
-            maxLen = last - start + 1;
-            ans = "";
 
-            for (int j = start; j <= last; j++)
+        if (sum >= target)
+        {
+            minimal = min(minimal, right - left);
+        }
+
+        while (sum >= target && left <= right)
+        {
+            sum -= nums[left];
+            left++;
+            if (sum >= target)
             {
-                ans += s[j];
+                minimal = min(minimal, right - left);
             }
         }
     }
-
-    cout << ans << endl;
+    cout << (minimal == INT_MAX ? 0 : minimal) << endl;
 }
 
 signed main()
