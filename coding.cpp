@@ -6,59 +6,118 @@
     cin.tie(NULL);
 using namespace std;
 
+class Node
+{
+public:
+    int val;
+    Node *left;
+    Node *right;
+    Node *next;
+
+    Node() : val(0), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val, Node *_left, Node *_right, Node *_next)
+        : val(_val), left(_left), right(_right), next(_next) {}
+};
+
+void insert(Node *&root, int val)
+{
+    if (root == NULL)
+    {
+        root = new Node(val);
+        return;
+    }
+    if (val < root->val)
+    {
+        insert(root->left, val);
+    }
+    else
+    {
+        insert(root->right, val);
+    }
+}
+
+
+void levelOrder(Node *root){
+    queue<Node*> q;
+    q.push(root);
+
+    while(!q.empty()){
+        Node *curr = q.front();
+        q.pop();
+        if(curr->next != NULL){
+            cout << curr->val  << " ";
+        }
+        else{
+            cout << curr->val << " #" << " ";
+        }
+        
+        if(curr->left != NULL){
+            q.push(curr->left);
+        }
+        if(curr->right != NULL){
+            q.push(curr->right);
+        }
+    }
+}
+
+void connect(Node *root){
+
+    queue<Node*> q;
+    q.push(root);
+
+    while(!q.empty()){
+        int len = q.size();
+        Node *prev = NULL;
+
+        for( int i = 0 ; i < len ; i++){
+
+            Node *curr = q.front();
+            q.pop();
+
+            if(prev != NULL){
+                prev -> next = curr;
+            }
+            
+            prev = curr;
+
+            if(curr->left != NULL){
+                q.push(curr->left);
+            }
+            if(curr->right != NULL){
+                q.push(curr->right);
+            }
+
+        }
+    }
+}
+
+
 void solve()
 {
-    int target;
-    vector<int> nums;
 
     int n;
     cin >> n;
-    cin >> target;
-    int minimal = INT_MAX;
 
+    Node *root = NULL;
     for (int i = 0; i < n; i++)
     {
-        int x;
-        cin >> x;
-        nums.push_back(x);
+        int val;
+        cin >> val;
+        insert(root, val);
     }
-        int len = nums.size();
+    connect(root);
+    levelOrder(root);
 
-    int left = 0, right = 0;
-    int sum = 0;
 
-    while (right < len)
-    {
-        
 
-        while (sum < target && right < len)
-        {
-            sum += nums[right];
-            // cout<<sum<<" ";
-            right++;
-        }
-
-        if (sum >= target)
-        {
-            minimal = min(minimal, right - left);
-        }
-
-        while (sum >= target && left <= right)
-        {
-            sum -= nums[left];
-            left++;
-            if (sum >= target)
-            {
-                minimal = min(minimal, right - left);
-            }
-        }
-    }
-    cout << (minimal == INT_MAX ? 0 : minimal) << endl;
 }
 
 signed main()
 {
-    CODEGOD;
+    // CODEGOD;
     int t = 1;
     //  cin >> t;
     while (t--)
