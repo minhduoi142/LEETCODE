@@ -1,17 +1,7 @@
-#include <bits/stdc++.h>
-#define endl "\n"
-#define int long long
-#define CODEGOD                       \
-    ios_base::sync_with_stdio(false); \
-    cin.tie(NULL);
-using namespace std;
-
-void solve()
-{
-    string num1, num2;
-    cin >> num1 >> num2;
-
-    int n1 = num1.size();
+class Solution {
+public:
+    string multiply(string num1, string num2) {
+        int n1 = num1.size();
     int n2 = num2.size();
 
     vector<int> v(n1 + n2, 0);
@@ -36,26 +26,16 @@ void solve()
         }
     }
     int start = 0;
+    string res = "";
     while( start < v.size() && v[start] == 0 ) start++;
-    if( start == v.size() ) cout << 0;
+    if( start == v.size() ) res = "0";
     else
     {
         for( int i = start; i < v.size(); i++ )
         {
-            cout << v[i];
+            res += to_string(v[i]);
         }
     }
-
-}
-
-signed main()
-{
-    CODEGOD;
-    int t = 1;
-    //  cin >> t;
-    while (t--)
-    {
-        /* code */
-        solve();
+    return res;
     }
-}
+};
