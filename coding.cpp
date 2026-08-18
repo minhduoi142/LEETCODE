@@ -6,113 +6,90 @@
     cin.tie(NULL);
 using namespace std;
 
-class Node
+struct ListNode
 {
-public:
     int val;
-    Node *left;
-    Node *right;
-    Node *next;
-
-    Node() : val(0), left(NULL), right(NULL), next(NULL) {}
-
-    Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}
-
-    Node(int _val, Node *_left, Node *_right, Node *_next)
-        : val(_val), left(_left), right(_right), next(_next) {}
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
 
-void insert(Node *&root, int val)
+void insertNode(ListNode *&head, int val)
 {
-    if (root == NULL)
+    if (head == NULL)
     {
-        root = new Node(val);
-        return;
-    }
-    if (val < root->val)
-    {
-        insert(root->left, val);
+        head = new ListNode(val);
     }
     else
     {
-        insert(root->right, val);
+        ListNode *curr = head;
+
+        while (curr->next != NULL)
+        {
+            curr = curr->next;
+        }
+
+        curr->next = new ListNode(val);
     }
 }
 
+void print(ListNode *head)
+{
+    ListNode *curr = head;
 
-void levelOrder(Node *root){
-    queue<Node*> q;
-    q.push(root);
-
-    while(!q.empty()){
-        Node *curr = q.front();
-        q.pop();
-        if(curr->next != NULL){
-            cout << curr->val  << " ";
-        }
-        else{
-            cout << curr->val << " #" << " ";
-        }
-        
-        if(curr->left != NULL){
-            q.push(curr->left);
-        }
-        if(curr->right != NULL){
-            q.push(curr->right);
-        }
+    while (curr != NULL)
+    {
+        cout << curr->val << " ";
+        curr = curr->next;
     }
+    cout << endl;
 }
-
-void connect(Node *root){
-
-    queue<Node*> q;
-    q.push(root);
-
-    while(!q.empty()){
-        int len = q.size();
-        Node *prev = NULL;
-
-        for( int i = 0 ; i < len ; i++){
-
-            Node *curr = q.front();
-            q.pop();
-
-            if(prev != NULL){
-                prev -> next = curr;
-            }
-            
-            prev = curr;
-
-            if(curr->left != NULL){
-                q.push(curr->left);
-            }
-            if(curr->right != NULL){
-                q.push(curr->right);
-            }
-
-        }
-    }
-}
-
 
 void solve()
 {
-
     int n;
     cin >> n;
-
-    Node *root = NULL;
+    int k;
+    cin >> k;
+    ListNode *head = NULL;
+    int len = 1;
     for (int i = 0; i < n; i++)
     {
-        int val;
-        cin >> val;
-        insert(root, val);
+        int x;
+        cin >> x;
+
+        insertNode(head, x);
     }
-    connect(root);
-    levelOrder(root);
 
+    ListNode *last = head;
 
+    while (last->next != NULL)
+    {
+        last = last->next;
+        len++;
+    }
 
+    k = k % len;
+
+    if(k == 0){
+        
+        print(head);
+        return;
+    }
+    ListNode *newHead = head;
+    for (int i = 1; i < len - k; i++)
+    {
+        newHead = newHead->next;
+    }
+    ListNode *temp = newHead;
+
+    newHead = newHead->next;
+    last->next = head;
+
+    temp->next = NULL;
+
+    print(newHead);
 }
 
 signed main()
