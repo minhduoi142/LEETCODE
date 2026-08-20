@@ -30,8 +30,7 @@ void inserListNode(ListNode *&head, int val)
     }
     temp->next = newNode;
 }
-
-void printListNode(ListNode *head)
+void printList(ListNode *head)
 {
     ListNode *temp = head;
     while (temp != nullptr)
@@ -44,49 +43,38 @@ void printListNode(ListNode *head)
 
 void solve()
 {
-
     int n;
-    int x;
-
     cin >> n;
-    cin >> x;
     ListNode *head = nullptr;
 
     for (int i = 0; i < n; i++)
     {
-        int x;
-        cin >> x;
-        inserListNode(head, x);
+        int val;
+        cin >> val;
+        inserListNode(head, val);
     }
 
-    ListNode *temp = head;
-    vector<int> moveValues;
-    vector<int> fixedValues;
+    int left;
+    int right;
+    cin >> left >> right;
 
-    while (temp != nullptr)
-    {
-        if(temp->val < x){
-            moveValues.push_back(temp->val);
-        }
-        else{
-            fixedValues.push_back(temp->val);
-        }
-        temp = temp->next;
+    ListNode *dummy = new ListNode(0);
+    ListNode *prev = dummy;
+    prev->next = head;
+
+    for( int i = 0 ; i < left - 1; i ++){
+        prev = prev->next;
     }
 
-    sort(moveValues.begin(), moveValues.end());
+    ListNode *curr = prev->next;
 
-    ListNode *newHead = nullptr;
-    for (int val : moveValues)
-    {
-        inserListNode(newHead, val);
+    for( int i = 0 ; i < right - left; i ++){
+        ListNode *temp = curr->next;
+        curr->next = temp->next;
+        temp->next = prev->next;
+        prev->next = temp;
     }
-    for(int val : fixedValues)
-    {
-        inserListNode(newHead, val);
-    }
-
-    printListNode(newHead);
+    printList(dummy->next);
 }
 
 signed main()
