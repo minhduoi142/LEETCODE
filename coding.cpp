@@ -6,82 +6,87 @@
     cin.tie(NULL);
 using namespace std;
 
-struct TreeNode
+struct ListNode
 {
     int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
 };
 
-struct Node{
-    TreeNode* node;
-    int min;
-    int max;
-};
-
-void insertBST(TreeNode *&root, int val)
+void inserListNode(ListNode *&head, int val)
 {
-    if (root == nullptr)
+    ListNode *newNode = new ListNode(val);
+    if (head == nullptr)
     {
-        root = new TreeNode(val);
+        head = newNode;
         return;
     }
-
-    if (val < root->val)
+    ListNode *temp = head;
+    while (temp->next != nullptr)
     {
-        insertBST(root->left, val);
+        temp = temp->next;
     }
-    else
-    {
-        insertBST(root->right, val);
-    }
+    temp->next = newNode;
 }
 
-
-bool validate(TreeNode * root){
-    queue<Node> q;
-
-    q.push({root, INT_MIN, INT_MAX});
-
-    while(!q.empty()){
-        Node current = q.front();
-        q.pop();
-        TreeNode* node = current.node;
-        int min_val = current.min;
-        int max_val = current.max;
-
-        if(node->left){
-            if(node->left-> val >= node -> val || node -> left -> val <= min_val){
-                return false;
-            }
-            q.push({node->left, min_val, node->val});
-        }
-        if(node->right){
-            if(node->right->val <= node->val || node->right->val >= max_val){
-                return false;
-            }
-            q.push({node->right, node->val, max_val});
-        }
+void printListNode(ListNode *head)
+{
+    ListNode *temp = head;
+    while (temp != nullptr)
+    {
+        cout << temp->val << " ";
+        temp = temp->next;
     }
-    return true;
+    cout << endl;
 }
 
 void solve()
 {
+
     int n;
+    int x;
+
     cin >> n;
+    cin >> x;
+    ListNode *head = nullptr;
+
     for (int i = 0; i < n; i++)
     {
         int x;
         cin >> x;
-        TreeNode *root = nullptr;
-        insertBST(root, x);
+        inserListNode(head, x);
     }
 
+    ListNode *temp = head;
+    vector<int> moveValues;
+    vector<int> fixedValues;
 
+    while (temp != nullptr)
+    {
+        if(temp->val < x){
+            moveValues.push_back(temp->val);
+        }
+        else{
+            fixedValues.push_back(temp->val);
+        }
+        temp = temp->next;
+    }
+
+    sort(moveValues.begin(), moveValues.end());
+
+    ListNode *newHead = nullptr;
+    for (int val : moveValues)
+    {
+        inserListNode(newHead, val);
+    }
+    for(int val : fixedValues)
+    {
+        inserListNode(newHead, val);
+    }
+
+    printListNode(newHead);
 }
 
 signed main()
