@@ -6,75 +6,49 @@
     cin.tie(NULL);
 using namespace std;
 
-struct ListNode
-{
-    int val;
-    ListNode *next;
-    ListNode() : val(0), next(nullptr) {}
-    ListNode(int x) : val(x), next(nullptr) {}
-    ListNode(int x, ListNode *next) : val(x), next(next) {}
-};
+vector<int> curr;
+vector<vector<int>> res;
 
-void inserListNode(ListNode *&head, int val)
+void backtrack(vector<int> &nums, int i, vector<vector<int>> &res)
 {
-    ListNode *newNode = new ListNode(val);
-    if (head == nullptr)
+    if (i == nums.size())
     {
-        head = newNode;
         return;
     }
-    ListNode *temp = head;
-    while (temp->next != nullptr)
+    for (int j = i; j < nums.size(); j++)
     {
-        temp = temp->next;
+        curr.push_back(nums[j]);
+        res.push_back(curr);
+        backtrack(nums, i + 1, res);
+        curr.pop_back();
     }
-    temp->next = newNode;
-}
-void printList(ListNode *head)
-{
-    ListNode *temp = head;
-    while (temp != nullptr)
-    {
-        cout << temp->val << " ";
-        temp = temp->next;
-    }
-    cout << endl;
 }
 
 void solve()
 {
+
     int n;
     cin >> n;
-    ListNode *head = nullptr;
+
+    vector<int> nums;
 
     for (int i = 0; i < n; i++)
     {
-        int val;
-        cin >> val;
-        inserListNode(head, val);
+        int x;
+        cin >> x;
+        nums.push_back(x);
     }
+    backtrack(nums, 0, res);
+    res.push_back({});
 
-    int left;
-    int right;
-    cin >> left >> right;
-
-    ListNode *dummy = new ListNode(0);
-    ListNode *prev = dummy;
-    prev->next = head;
-
-    for( int i = 0 ; i < left - 1; i ++){
-        prev = prev->next;
+    for (vector<int> x : res)
+    {
+        for (int y : x)
+        {
+            cout << y << " ";
+        }
+        cout << endl;
     }
-
-    ListNode *curr = prev->next;
-
-    for( int i = 0 ; i < right - left; i ++){
-        ListNode *temp = curr->next;
-        curr->next = temp->next;
-        temp->next = prev->next;
-        prev->next = temp;
-    }
-    printList(dummy->next);
 }
 
 signed main()
