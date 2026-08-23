@@ -6,48 +6,64 @@
     cin.tie(NULL);
 using namespace std;
 
-vector<int> curr;
-vector<vector<int>> res;
-
-void backtrack(vector<int> &nums, int i, vector<vector<int>> &res)
+bool cmp(vector<int> a, vector<int> b)
 {
-    if (i == nums.size())
-    {
-        return;
-    }
-    for (int j = i; j < nums.size(); j++)
-    {
-        curr.push_back(nums[j]);
-        res.push_back(curr);
-        backtrack(nums, i + 1, res);
-        curr.pop_back();
-    }
+    return (a[0] <= b[0]);
 }
 
 void solve()
 {
 
+    vector<vector<int>> intervals;
     int n;
     cin >> n;
 
-    vector<int> nums;
-
     for (int i = 0; i < n; i++)
     {
-        int x;
-        cin >> x;
-        nums.push_back(x);
+        int start, end;
+        cin >> start >> end;
+        vector<int> temp;
+        temp.push_back(start);
+        temp.push_back(end);
+        intervals.push_back(temp);
     }
-    backtrack(nums, 0, res);
-    res.push_back({});
 
-    for (vector<int> x : res)
+    sort(intervals.begin(), intervals.end(), cmp);
+
+    int len = intervals.size();
+    stack<vector<int>> ans;
+
+    ans.push(intervals[0]);
+
+    for (int i = 1; i < len; i++)
     {
-        for (int y : x)
+        if (intervals[i][0] <= ans.top()[1] && intervals[i][1] >= ans.top()[1])
         {
-            cout << y << " ";
+            ans.top()[1] = intervals[i][1];
         }
-        cout << endl;
+        else if (intervals[i][0] <= ans.top()[0] && intervals[i][1] <= ans.top()[1])
+        {
+            ans.top()[0] = intervals[i][0];
+        }
+        else if (intervals[i][0] <= ans.top()[1] && intervals[i][1] >= ans.top()[1])
+        {
+            ans.top()[0] = intervals[i][0];
+            ans.top()[1] = intervals[i][1];
+        }
+        else if (intervals[i][0] >= ans.top()[0] && intervals[i][1] <= ans.top()[1])
+        {
+        }
+        else
+            ans.push(intervals[i]);
+    }
+
+    vector<vector<int>> res;
+
+    while (!ans.empty())
+    {
+        cout << ans.top()[0] << " " << ans.top()[1] << endl;
+        ans.pop();
+        /* code */
     }
 }
 
