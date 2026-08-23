@@ -6,7 +6,7 @@
     cin.tie(NULL);
 using namespace std;
 
-bool cmp(vector<int> a, vector<int> b)
+bool cmp(vector<long long> a, vector<long long> b)
 {
     return (a[0] <= b[0]);
 }
@@ -14,7 +14,8 @@ bool cmp(vector<int> a, vector<int> b)
 void solve()
 {
 
-    vector<vector<int>> intervals;
+    vector<vector<long long>> intervals;
+    vector<int> newInterval;
     int n;
     cin >> n;
 
@@ -28,42 +29,36 @@ void solve()
         intervals.push_back(temp);
     }
 
-    sort(intervals.begin(), intervals.end(), cmp);
-
-    int len = intervals.size();
-    stack<vector<int>> ans;
-
-    ans.push(intervals[0]);
-
-    for (int i = 1; i < len; i++)
-    {
-        if (intervals[i][0] <= ans.top()[1] && intervals[i][1] >= ans.top()[1])
-        {
-            ans.top()[1] = intervals[i][1];
-        }
-        else if (intervals[i][0] <= ans.top()[0] && intervals[i][1] <= ans.top()[1])
-        {
-            ans.top()[0] = intervals[i][0];
-        }
-        else if (intervals[i][0] <= ans.top()[1] && intervals[i][1] >= ans.top()[1])
-        {
-            ans.top()[0] = intervals[i][0];
-            ans.top()[1] = intervals[i][1];
-        }
-        else if (intervals[i][0] >= ans.top()[0] && intervals[i][1] <= ans.top()[1])
-        {
-        }
-        else
-            ans.push(intervals[i]);
-    }
+    int x, y;
+    cin >> x >> y;
+    newInterval.push_back(x);
+    newInterval.push_back(y);
 
     vector<vector<int>> res;
 
-    while (!ans.empty())
+    // if(intervals.empty()){
+    //     res.push_back(newInterval);
+    //     return res;
+    // }
+    intervals.push_back(newInterval);
+    sort(intervals.begin(), intervals.end());
+    int len = intervals.size();
+
+    res.push_back(intervals[0]);
+
+    for (int i = 1; i < len; i++)
     {
-        cout << ans.top()[0] << " " << ans.top()[1] << endl;
-        ans.pop();
-        /* code */
+        if (intervals[i][0] <= res.back()[1])
+        {
+            res.back()[1] = max(res.back()[1], intervals[i][1]);
+        }
+        else
+            res.push_back(intervals[i]);
+    }
+
+    for (vector<int> x : res)
+    {
+        cout << x[0] << " " << x[1] << endl;
     }
 }
 
