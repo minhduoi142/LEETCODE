@@ -5,89 +5,53 @@
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);
 using namespace std;
+vector<int> nums;
+set<vector<int>> res;
 
-struct item
+void backtrack(int i, vector<int> &curr, vector<int> &nums)
 {
-    char c;
-    int x;
-    int y;
-};
-vector<vector<char>> board(100);
-string word;
-bool backtrack(int x, int y, int index, int n, int m)
-{
-    int len = word.size();
 
-    if (index == len)
+    if (i == nums.size() + 1)
     {
-        return true;
-    }
-    if (board[x][y] != word[index])
-    {
-        return false;
+        return;
     }
 
-    int temp = board[x][y];
-    board[x][y] = '#';
+    res.insert(curr);
 
-    if (x - 1 >= 0)
+    for (int j = i; j < nums.size(); j++)
     {
-        if (backtrack(x - 1, y, index + 1, n, m))
-            return true;
+        curr.push_back(nums[j]);
+        backtrack(j + 1, curr, nums);
+        curr.pop_back();
     }
-    if (x + 1 < n)
-    {
-        if (backtrack(x + 1, y, index + 1, n, m))
-            return true;
-    }
-    if (y - 1 >= 0)
-    {
-        if (backtrack(x, y - 1, index + 1, n, m))
-            return true;
-    }
-    if (y + 1 < m)
-    {
-        if (backtrack(x, y + 1, index + 1, n, m))
-            return true;
-    }
-
-    board[x][y] = temp;
-    return false;
 }
 
-bool solve()
+void solve()
 {
-
-    int m, n;
-    cin >> m >> n;
-
-    cin >> word;
+    int n;
+    cin >> n;
 
     for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < m; j++)
-        {
-            char x;
-            cin >> x;
-            board[i].push_back(x);
-        }
+        int x;
+        cin >> x;
+        nums.push_back(x);
     }
-    string s = "";
-    s += board[0][0];
-    cout << s;
-    if (n == 1 && m == 1)
+    sort(nums.begin(), nums.end());
+
+    vector<int> curr;
+    backtrack(0, curr, nums);
+    vector<vector<int>> ans;
+
+    for (vector<int> x : res)
     {
-        return word == to_string(board[0][0]);
-    }
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < m; j++)
+        for (int y : x)
         {
-            if (backtrack(i, j, 0, n, m))
-                return true;
+            cout << y << " ";
         }
+        cout << endl;
     }
-    return false;
+    // return ans;
 }
 
 signed main()
@@ -98,11 +62,6 @@ signed main()
     while (t--)
     {
         /* code */
-        if (solve())
-        {
-            cout << "YES";
-        }
-        else
-            cout << "NO";
+        solve();
     }
 }
