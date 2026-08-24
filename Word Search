@@ -1,0 +1,56 @@
+class Solution {
+public:
+    bool backtrack(int x, int y, int index, int n, int m,
+                   vector<vector<char>>& board, string word) {
+        int len = word.size();
+
+        if (index == len) {
+            return true;
+        }
+        if (board[x][y] != word[index]) {
+            return false;
+        }
+
+        int temp = board[x][y];
+        board[x][y] = '#';
+
+        if (x - 1 >= 0) {
+            if (backtrack(x - 1, y, index + 1, n, m, board, word))
+                return true;
+        }
+        if (x + 1 < n) {
+            if (backtrack(x + 1, y, index + 1, n, m, board, word))
+                return true;
+        }
+        if (y - 1 >= 0) {
+            if (backtrack(x, y - 1, index + 1, n, m, board, word))
+                return true;
+        }
+        if (y + 1 < m) {
+            if (backtrack(x, y + 1, index + 1, n, m, board, word))
+                return true;
+        }
+
+        board[x][y] = temp;
+        return false;
+    }
+    bool exist(vector<vector<char>>& board, string word) {
+
+        int n = board.size();
+        int m = board[0].size();
+
+        string s = "";
+        s += board[0][0];
+        // cout << s;
+        if (n == 1 && m == 1) {
+            return word == s;
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (backtrack(i, j, 0, n, m, board, word))
+                    return true;
+            }
+        }
+        return false;
+    }
+};

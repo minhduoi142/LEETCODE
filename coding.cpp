@@ -6,60 +6,88 @@
     cin.tie(NULL);
 using namespace std;
 
-bool cmp(vector<long long> a, vector<long long> b)
+struct item
 {
-    return (a[0] <= b[0]);
+    char c;
+    int x;
+    int y;
+};
+vector<vector<char>> board(100);
+string word;
+bool backtrack(int x, int y, int index, int n, int m)
+{
+    int len = word.size();
+
+    if (index == len)
+    {
+        return true;
+    }
+    if (board[x][y] != word[index])
+    {
+        return false;
+    }
+
+    int temp = board[x][y];
+    board[x][y] = '#';
+
+    if (x - 1 >= 0)
+    {
+        if (backtrack(x - 1, y, index + 1, n, m))
+            return true;
+    }
+    if (x + 1 < n)
+    {
+        if (backtrack(x + 1, y, index + 1, n, m))
+            return true;
+    }
+    if (y - 1 >= 0)
+    {
+        if (backtrack(x, y - 1, index + 1, n, m))
+            return true;
+    }
+    if (y + 1 < m)
+    {
+        if (backtrack(x, y + 1, index + 1, n, m))
+            return true;
+    }
+
+    board[x][y] = temp;
+    return false;
 }
 
-void solve()
+bool solve()
 {
 
-    vector<vector<long long>> intervals;
-    vector<int> newInterval;
-    int n;
-    cin >> n;
+    int m, n;
+    cin >> m >> n;
+
+    cin >> word;
 
     for (int i = 0; i < n; i++)
     {
-        int start, end;
-        cin >> start >> end;
-        vector<int> temp;
-        temp.push_back(start);
-        temp.push_back(end);
-        intervals.push_back(temp);
-    }
-
-    int x, y;
-    cin >> x >> y;
-    newInterval.push_back(x);
-    newInterval.push_back(y);
-
-    vector<vector<int>> res;
-
-    // if(intervals.empty()){
-    //     res.push_back(newInterval);
-    //     return res;
-    // }
-    intervals.push_back(newInterval);
-    sort(intervals.begin(), intervals.end());
-    int len = intervals.size();
-
-    res.push_back(intervals[0]);
-
-    for (int i = 1; i < len; i++)
-    {
-        if (intervals[i][0] <= res.back()[1])
+        for (int j = 0; j < m; j++)
         {
-            res.back()[1] = max(res.back()[1], intervals[i][1]);
+            char x;
+            cin >> x;
+            board[i].push_back(x);
         }
-        else
-            res.push_back(intervals[i]);
     }
-
-    for (vector<int> x : res)
+    string s = "";
+    s += board[0][0];
+    cout << s;
+    if (n == 1 && m == 1)
     {
-        cout << x[0] << " " << x[1] << endl;
+        return word == to_string(board[0][0]);
     }
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (backtrack(i, j, 0, n, m))
+                return true;
+        }
+    }
+    return false;
 }
 
 signed main()
@@ -70,6 +98,11 @@ signed main()
     while (t--)
     {
         /* code */
-        solve();
+        if (solve())
+        {
+            cout << "YES";
+        }
+        else
+            cout << "NO";
     }
 }
