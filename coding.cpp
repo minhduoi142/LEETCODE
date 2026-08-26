@@ -5,43 +5,49 @@
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);
 using namespace std;
-vector<int> nums;
-set<vector<int>> res;
+int k, n;
+vector<vector<int>> res;
 
-void backtrack(int i, vector<int> &curr, vector<int> &nums)
+int sum(vector<int> curr)
+{
+    int res = 0;
+    for (int x : curr)
+    {
+        res += x;
+    }
+
+    return res;
+}
+
+void backtrack(int i, int num, vector<int> &curr, int k, int n)
 {
 
-    if (i == nums.size() + 1)
+    if (i == k && sum(curr) == n)
+    {
+        res.push_back(curr);
+        return;
+    }
+
+    if (i > k || num > 9)
     {
         return;
     }
 
-    res.insert(curr);
-
-    for (int j = i; j < nums.size(); j++)
+    for (int j = num; j <= 9; j++)
     {
-        curr.push_back(nums[j]);
-        backtrack(j + 1, curr, nums);
+        curr.push_back(j);
+        backtrack(i + 1, j + 1, curr, k, n);
         curr.pop_back();
     }
 }
 
 void solve()
 {
-    int n;
-    cin >> n;
 
-    for (int i = 0; i < n; i++)
-    {
-        int x;
-        cin >> x;
-        nums.push_back(x);
-    }
-    sort(nums.begin(), nums.end());
+    cin >> k >> n;
 
     vector<int> curr;
-    backtrack(0, curr, nums);
-    vector<vector<int>> ans;
+    backtrack(0, 1, curr, k, n);
 
     for (vector<int> x : res)
     {
@@ -51,7 +57,6 @@ void solve()
         }
         cout << endl;
     }
-    // return ans;
 }
 
 signed main()

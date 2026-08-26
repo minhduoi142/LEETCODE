@@ -1,0 +1,40 @@
+class Solution {
+public:
+    vector<vector<int>> res;
+
+    int sum(vector<int>& curr) {
+        int res = 0;
+        for (int x : curr) {
+            res += x;
+        }
+
+        return res;
+    }
+
+    void backtrack(int i, int num, vector<int> &curr, int k, int n) {
+
+        if (i == k && sum(curr) == n) {
+            res.push_back(curr);
+            return;
+        }
+
+        if (i > k || num > 9) {
+            return;
+        }
+
+        for (int j = num; j <= 9; j++) {
+            curr.push_back(j);
+            backtrack(i + 1, j + 1, curr, k, n);
+            curr.pop_back();
+        }
+    }
+
+    vector<vector<int>> combinationSum3(int k, int n) {
+
+        // ios_base::sync_with_stdio(false);
+        // cin.tie(NULL);
+        vector<int> curr;
+        backtrack(0, 1, curr, k, n);
+        return res;
+    }
+};
