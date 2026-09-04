@@ -5,57 +5,76 @@
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);
 using namespace std;
-int k, n;
-vector<vector<int>> res;
-
-int sum(vector<int> curr)
+bool isvalid(string s)
 {
-    int res = 0;
-    for (int x : curr)
-    {
-        res += x;
-    }
+    stack<char> st;
 
-    return res;
+    int len = s.size();
+
+    for (int i = 0; i < len; i++)
+    {
+        if (s[i] == '(')
+        {
+            st.push('(');
+        }
+        else if (s[i] == ')')
+        {
+            if (st.empty())
+            {
+                return false;
+            }
+            else
+            {
+                st.pop();
+            }
+        }
+    }
+    return true;
 }
-
-void backtrack(int i, int num, vector<int> &curr, int k, int n)
-{
-
-    if (i == k && sum(curr) == n)
-    {
-        res.push_back(curr);
-        return;
-    }
-
-    if (i > k || num > 9)
-    {
-        return;
-    }
-
-    for (int j = num; j <= 9; j++)
-    {
-        curr.push_back(j);
-        backtrack(i + 1, j + 1, curr, k, n);
-        curr.pop_back();
-    }
-}
-
 void solve()
 {
+    string s;
+    cin >> s;
+    vector<string> res;
+    set<string> ans;
+    queue<string> q;
 
-    cin >> k >> n;
+    bool found = false;
+    q.push(s);
 
-    vector<int> curr;
-    backtrack(0, 1, curr, k, n);
-
-    for (vector<int> x : res)
+    while (!q.empty())
     {
-        for (int y : x)
+
+        string curr = q.front();
+        q.pop();
+
+        if (isvalid(curr))
         {
-            cout << y << " ";
+            ans.insert(curr);
+            found = true;
         }
-        cout << endl;
+
+        if (found)
+            continue;
+
+        int len = curr.size();
+
+        for (int i = 0; i < len; i++)
+        {
+            if (curr[i] != '(' && curr[i] != ')')
+                continue;
+            string temp = curr.substr(0, i) + curr.substr(i + 1);
+            q.push(temp);
+        }
+    }
+    for (auto x : ans)
+    {
+        res.push_back(x);
+    }
+
+    for(int i = 0; i < res.size(); i++)
+    {
+        cout << res[i] << endl;
     }
 }
 

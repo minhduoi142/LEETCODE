@@ -1,0 +1,57 @@
+class Solution {
+public:
+    bool isvalid(string s) {
+        stack<char> st;
+
+        int len = s.size();
+
+        for (int i = 0; i < len; i++) {
+            if (s[i] == '(') {
+                st.push('(');
+            } else if (s[i] == ')') {
+                if (st.empty()) {
+                    return false;
+                } else {
+                    st.pop();
+                }
+            }
+        }
+        return st.empty();
+    }
+    vector<string> removeInvalidParentheses(string s) {
+        vector<string> res;
+        unordered_set<string> visited;
+        queue<string> q;
+
+        bool found = false;
+        q.push(s);
+        visited.insert(s);
+
+        while (!q.empty()) {
+
+            string curr = q.front();
+            q.pop();
+
+            if (isvalid(curr)) {
+                res.push_back(curr);
+                found = true;
+            }
+
+            if (found)
+                continue;
+
+            int len = curr.size();
+
+            for (int i = 0; i < len; i++) {
+                if (curr[i] != '(' && curr[i] != ')')
+                    continue;
+                string temp = curr.substr(0, i) + curr.substr(i + 1);
+                if (visited.find(temp) == visited.end()) {
+                    visited.insert(temp);
+                    q.push(temp);
+                }
+            }
+        }
+        return res;
+    }
+};
