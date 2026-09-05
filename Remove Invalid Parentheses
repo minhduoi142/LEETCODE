@@ -1,87 +1,57 @@
-#include <bits/stdc++.h>
-#define endl "\n"
-#define int long long
-#define CODEGOD                       \
-    ios_base::sync_with_stdio(false); \
-    cin.tie(NULL);
-using namespace std;
+class Solution {
+public:
+    bool isvalid(string s) {
+        stack<char> st;
 
-struct TreeNode
-{
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+        int len = s.size();
+
+        for (int i = 0; i < len; i++) {
+            if (s[i] == '(') {
+                st.push('(');
+            } else if (s[i] == ')') {
+                if (st.empty()) {
+                    return false;
+                } else {
+                    st.pop();
+                }
+            }
+        }
+        return st.empty();
+    }
+    vector<string> removeInvalidParentheses(string s) {
+        vector<string> res;
+        unordered_set<string> visited;
+        queue<string> q;
+
+        bool found = false;
+        q.push(s);
+        visited.insert(s);
+
+        while (!q.empty()) {
+
+            string curr = q.front();
+            q.pop();
+
+            if (isvalid(curr)) {
+                res.push_back(curr);
+                found = true;
+            }
+
+            if (found)
+                continue;
+
+            int len = curr.size();
+
+            for (int i = 0; i < len; i++) {
+                if (curr[i] != '(' && curr[i] != ')')
+                    continue;
+                string temp = curr.substr(0, i) + curr.substr(i + 1);
+                if (visited.find(temp) == visited.end()) {
+                    visited.insert(temp);
+                    q.push(temp);
+                }
+            }
+        }
+        return res;
+    }
 };
-
-void insertBTree(TreeNode *&root, int val)
-{
-
-    if (root == nullptr)
-    {
-        root = new TreeNode(val);
-        return;
-    }
-    else
-    {
-        if (val < root->val)
-        {
-            insertBTree(root->left, val);
-        }
-        else if (val > root->val)
-        {
-            insertBTree(root->right, val);
-        }
-    }
-}
-vector<int> res;
-
-void printLevelOrder(TreeNode *root)
-{
-
-    queue<int> q;
-    if (root != nullptr)
-    {
-        q.push(root->val);
-    }
-    else
-        return;
-
-    while (!q.empty())
-    {
-        int curr = q.front();
-        q.pop();
-        res.push_back(curr);
-
-        fo
-
-        /* code */
-    }
-}
-void solve()
-{
-    int n;
-    cin >> n;
-
-    TreeNode *root = nullptr;
-    for (int i = 0; i < n; i++)
-    {
-        int x;
-        cin >> x;
-        insertBTree(root, x);
-    }
-}
-
-signed main()
-{
-    CODEGOD;
-    int t = 1;
-    //  cin >> t;
-    while (t--)
-    {
-        /* code */
-        solve();
-    }
-}

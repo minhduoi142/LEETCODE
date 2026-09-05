@@ -6,98 +6,106 @@
     cin.tie(NULL);
 using namespace std;
 
-struct TreeNode
-{
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
-};
+vector<vector<string>> ans;
 
-void insertBTree(TreeNode *&root, int val)
+void dfs(string word, string beginWord, unordered_map<string, int> &mpp, vector<string> &seq)
 {
 
-    if (root == nullptr)
+    if (beginWord == word)
     {
-        root = new TreeNode(val);
+        reverse(seq.begin(), seq.end());
+        ans.push_back(seq);
+        reverse(seq.begin(), seq.end());
         return;
     }
-    else
+
+    int len = word.size();
+
+    for (int i = 0; i < len; i++)
     {
-        if (val < root->val)
+
+        string temp = word;
+        for (char ch = 'a'; ch <= 'z'; ch++)
         {
-            insertBTree(root->left, val);
-        }
-        else if (val > root->val)
-        {
-            insertBTree(root->right, val);
+            temp[i] = ch;
+            if (mpp.count(temp) && mpp[word] - 1 == mpp[temp])
+            {
+                seq.push_back(temp);
+                dfs(temp, beginWord, mpp, seq);
+                seq.pop_back();
+            }
         }
     }
 }
-vector<vector<int>> res;
 
-void printLevelOrder(TreeNode *root)
+void solve()
 {
 
-    queue<TreeNode *> q;
-    if (root != nullptr)
+    string beginWord;
+    string endWord;
+    cin >> beginWord >> endWord;
+    vector<string> wordList;
+
+    int n;
+    cin >> n;
+
+    for (int i = 0; i < n; i++)
     {
-        q.push(root);
+        string x;
+        cin >> x;
+        wordList.push_back(x);
     }
-    else
-        return;
+
+    unordered_set<string> words;
+    unordered_map<string, int> mpp;
+    queue<string> q;
+
+    for (string x : wordList)
+    {
+        words.insert(x);
+    }
+
+    q.push(beginWord);
+    mpp[beginWord] = 1;
+    words.erase(beginWord);
 
     while (!q.empty())
     {
-        int len = q.size();
-        vector<int> layer;
+        string curr = q.front();
+        q.pop();
 
+        int len = curr.size();
+        int step = mpp[curr];
         for (int i = 0; i < len; i++)
         {
-            TreeNode *curr = q.front();
-            layer.push_back(curr->val);
-            q.pop();
+            char ori = curr[i];
 
-            if (curr->left != nullptr)
+            for (char ch = 'a'; ch <= 'z'; ch++)
             {
-                q.push(curr->left);
+                curr[i] = ch;
+                if (words.count(curr) && ch != ori)
+                {
+                    mpp[curr] = step + 1;
+                    q.push(curr);
+                    words.erase(curr);
+                }
             }
-            if (curr->right != nullptr)
-            {
-                q.push(curr->right);
-            }
+            curr[i] = ori;
         }
-        // layer.push_back(0);
-
-        res.push_back(layer);
         /* code */
     }
 
-    for (auto x : res)
+    vector<string> seq = {endWord};
+    dfs(endWord, beginWord, mpp, seq);
+
+    for (auto x : ans)
     {
-        for (int y : x)
+        for (string y : x)
         {
             cout << y << " ";
         }
         cout << endl;
     }
-}
-void solve()
-{
-    int n;
-    cin >> n;
-
-    TreeNode *root = nullptr;
-    for (int i = 0; i < n; i++)
-    {
-        int x;
-        cin >> x;
-        insertBTree(root, x);
-    }
-
-    printLevelOrder(root);
 }
 
 signed main()
