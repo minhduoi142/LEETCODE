@@ -5,77 +5,96 @@
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);
 using namespace std;
-bool isvalid(string s)
+
+struct TreeNode
 {
-    stack<char> st;
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
 
-    int len = s.size();
+void insertBTree(TreeNode *&root, int val)
+{
 
-    for (int i = 0; i < len; i++)
+    if (root == nullptr)
     {
-        if (s[i] == '(')
+        root = new TreeNode(val);
+        return;
+    }
+    else
+    {
+        if (val < root->val)
         {
-            st.push('(');
+            insertBTree(root->left, val);
         }
-        else if (s[i] == ')')
+        else if (val > root->val)
         {
-            if (st.empty())
-            {
-                return false;
-            }
-            else
-            {
-                st.pop();
-            }
+            insertBTree(root->right, val);
         }
     }
-    return true;
 }
-void solve()
-{
-    string s;
-    cin >> s;
-    vector<string> res;
-    set<string> ans;
-    queue<string> q;
+vector<vector<int>> res;
 
-    bool found = false;
-    q.push(s);
+void printLevelOrder(TreeNode *root)
+{
+
+    queue<TreeNode *> q;
+    if (root != nullptr)
+    {
+        q.push(root);
+    }
+    else
+        return;
 
     while (!q.empty())
     {
-
-        string curr = q.front();
-        q.pop();
-
-        if (isvalid(curr))
-        {
-            ans.insert(curr);
-            found = true;
-        }
-
-        if (found)
-            continue;
-
-        int len = curr.size();
+        int len = q.size();
+        vector<int> layer;
 
         for (int i = 0; i < len; i++)
         {
-            if (curr[i] != '(' && curr[i] != ')')
-                continue;
-            string temp = curr.substr(0, i) + curr.substr(i + 1);
-            q.push(temp);
+            TreeNode *curr = q.front();
+            layer.push_back(curr->val);
+            q.pop();
+
+            if (curr->left != nullptr)
+            {
+                q.push(curr->left);
+            }
+            if (curr->right != nullptr)
+            {
+                q.push(curr->right);
+            }
         }
-    }
-    for (auto x : ans)
-    {
-        res.push_back(x);
+        res.push_back(layer);
+        /* code */
     }
 
-    for(int i = 0; i < res.size(); i++)
+    for (auto x : res)
     {
-        cout << res[i] << endl;
+        for (int y : x)
+        {
+            cout << y << " ";
+        }
     }
+}
+void solve()
+{
+    int n;
+    cin >> n;
+
+    TreeNode *root = nullptr;
+    for (int i = 0; i < n; i++)
+    {
+        int x;
+        cin >> x;
+        insertBTree(root, x);
+    }
+
+    printLevelOrder(root);
 }
 
 signed main()
