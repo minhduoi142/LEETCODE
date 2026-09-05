@@ -49,7 +49,6 @@ void printLevelOrder(TreeNode *root)
     else
         return;
 
-    int zigzag = 0;
     while (!q.empty())
     {
         int len = q.size();
@@ -70,15 +69,8 @@ void printLevelOrder(TreeNode *root)
                 q.push(curr->right);
             }
         }
-        if (zigzag == 0)
-        {
-            reverse(layer.begin(), layer.end());
-            zigzag = 1;
-        }
-        else
-        {
-            zigzag = 0;
-        }
+        // layer.push_back(0);
+
         res.push_back(layer);
         /* code */
     }
@@ -89,6 +81,7 @@ void printLevelOrder(TreeNode *root)
         {
             cout << y << " ";
         }
+        cout << endl;
     }
 }
 void solve()
