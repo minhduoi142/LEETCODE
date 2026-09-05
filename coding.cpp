@@ -49,6 +49,7 @@ void printLevelOrder(TreeNode *root)
     else
         return;
 
+    int zigzag = 0;
     while (!q.empty())
     {
         int len = q.size();
@@ -68,6 +69,15 @@ void printLevelOrder(TreeNode *root)
             {
                 q.push(curr->right);
             }
+        }
+        if (zigzag == 0)
+        {
+            reverse(layer.begin(), layer.end());
+            zigzag = 1;
+        }
+        else
+        {
+            zigzag = 0;
         }
         res.push_back(layer);
         /* code */
@@ -99,7 +109,7 @@ void solve()
 
 signed main()
 {
-    CODEGOD;
+    // CODEGOD;
     int t = 1;
     //  cin >> t;
     while (t--)
