@@ -6,88 +6,72 @@
     cin.tie(NULL);
 using namespace std;
 
-int m, n;
-vector<vector<int>> vis(n, vector<int>(m, 0));
-
-void dfs(vector<vector<char>> &board, int x, int y)
+int solve()
 {
-    if (x < 0 || x >= n || y < 0 || y >= n || board[x][y] != 'O')
-        return;
-
-    board[x][y] = '#';
-
-    dfs(board, x + 1, y);
-    dfs(board, x - 1, y);
-    dfs(board, x, y + 1);
-    dfs(board, x, y - 1);
-}
-
-void solve()
-{
-
-    cin >> m >> n;
-    vector<vector<char>> board(n);
-    vector<vector<int>> vis(n, vector<int>(m, 0));
+    vector<int> nums;
+    int n;
+    cin >> n;
 
     for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < m; j++)
+        int x;
+        cin >> x;
+        nums.push_back(x);
+    }
+    int target;
+    cin >> target;
+
+    int len = nums.size();
+
+    int l = 0;
+    int r = len - 1;
+
+    while (l <= r)
+    {
+
+        int mid = (l + r) / 2;
+
+        if (nums[mid] == target)
         {
-            char x;
-            cin >> x;
-            board[i].push_back(x);
+            return mid;
         }
-    }
 
-    for (int i = 0; i < n; i++)
-    {
-        if (board[i][m - 1] == 'O')
-            dfs(board, i, m - 1);
-        if (board[i][0] == 'O')
-            dfs(board, i, 0);
-    }
-
-    for (int j = 0; j < m; j++)
-    {
-        if (board[0][j] == 'O')
-            dfs(board, 0, j);
-        if (board[n - 1][j] == 'O')
-            dfs(board, n - 1, j);
-    }
-
-    for (auto &x : board)
-    {
-        for (char &y : x)
+        if (nums[l] < nums[mid])
         {
-            if (y == '#')
+            if (target <= nums[mid] && target >= nums[l])
             {
-                y = 'O';
+                r = mid - 1;
             }
-            else if (y == 'O')
+            else
             {
-                y = 'X';
+                l = mid + 1;
             }
         }
-    }
-
-    for (auto x : board)
-    {
-        for (char y : x)
+        else
         {
-            cout << y;
+            if (target >= nums[mid] && target <= nums[l])
+            {
+                l = mid + 1;
+            }
+            else
+            {
+                r = mid - 1;
+            }
         }
-        cout << endl;
+
+        /* code */
     }
+    return -1;
 }
 
 signed main()
 {
-    // CODEGOD;
+    CODEGOD;
     int t = 1;
     //  cin >> t;
     while (t--)
     {
         /* code */
-        solve();
+        cout << solve();
     }
 }
