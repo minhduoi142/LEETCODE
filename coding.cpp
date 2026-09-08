@@ -6,103 +6,75 @@
     cin.tie(NULL);
 using namespace std;
 
-vector<vector<string>> ans;
+int m, n;
+vector<vector<int>> vis(n, vector<int>(m, 0));
 
-void dfs(string word, string beginWord, unordered_map<string, int> &mpp, vector<string> &seq)
+void dfs(vector<vector<char>> &board, int x, int y)
 {
-
-    if (beginWord == word)
-    {
-        reverse(seq.begin(), seq.end());
-        ans.push_back(seq);
-        reverse(seq.begin(), seq.end());
+    if (x < 0 || x >= n || y < 0 || y >= n || board[x][y] != 'O')
         return;
-    }
 
-    int len = word.size();
+    board[x][y] = '#';
 
-    for (int i = 0; i < len; i++)
-    {
-
-        string temp = word;
-        for (char ch = 'a'; ch <= 'z'; ch++)
-        {
-            temp[i] = ch;
-            if (mpp.count(temp) && mpp[word] - 1 == mpp[temp])
-            {
-                seq.push_back(temp);
-                dfs(temp, beginWord, mpp, seq);
-                seq.pop_back();
-            }
-        }
-    }
+    dfs(board, x + 1, y);
+    dfs(board, x - 1, y);
+    dfs(board, x, y + 1);
+    dfs(board, x, y - 1);
 }
 
 void solve()
 {
 
-    string beginWord;
-    string endWord;
-    cin >> beginWord >> endWord;
-    vector<string> wordList;
-
-    int n;
-    cin >> n;
+    cin >> m >> n;
+    vector<vector<char>> board(n);
+    vector<vector<int>> vis(n, vector<int>(m, 0));
 
     for (int i = 0; i < n; i++)
     {
-        string x;
-        cin >> x;
-        wordList.push_back(x);
-    }
-
-    unordered_set<string> words;
-    unordered_map<string, int> mpp;
-    queue<string> q;
-
-    for (string x : wordList)
-    {
-        words.insert(x);
-    }
-
-    q.push(beginWord);
-    mpp[beginWord] = 1;
-    words.erase(beginWord);
-
-    while (!q.empty())
-    {
-        string curr = q.front();
-        q.pop();
-
-        int len = curr.size();
-        int step = mpp[curr];
-        for (int i = 0; i < len; i++)
+        for (int j = 0; j < m; j++)
         {
-            char ori = curr[i];
-
-            for (char ch = 'a'; ch <= 'z'; ch++)
-            {
-                curr[i] = ch;
-                if (words.count(curr) && ch != ori)
-                {
-                    mpp[curr] = step + 1;
-                    q.push(curr);
-                    words.erase(curr);
-                }
-            }
-            curr[i] = ori;
+            char x;
+            cin >> x;
+            board[i].push_back(x);
         }
-        /* code */
     }
 
-    vector<string> seq = {endWord};
-    dfs(endWord, beginWord, mpp, seq);
-
-    for (auto x : ans)
+    for (int i = 0; i < n; i++)
     {
-        for (string y : x)
+        if (board[i][m - 1] == 'O')
+            dfs(board, i, m - 1);
+        if (board[i][0] == 'O')
+            dfs(board, i, 0);
+    }
+
+    for (int j = 0; j < m; j++)
+    {
+        if (board[0][j] == 'O')
+            dfs(board, 0, j);
+        if (board[n - 1][j] == 'O')
+            dfs(board, n - 1, j);
+    }
+
+    for (auto &x : board)
+    {
+        for (char &y : x)
         {
-            cout << y << " ";
+            if (y == '#')
+            {
+                y = 'O';
+            }
+            else if (y == 'O')
+            {
+                y = 'X';
+            }
+        }
+    }
+
+    for (auto x : board)
+    {
+        for (char y : x)
+        {
+            cout << y;
         }
         cout << endl;
     }
