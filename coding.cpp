@@ -31,6 +31,13 @@ int solve()
 
         int mid = (l + r) / 2;
 
+        if (nums[l] == nums[mid] && nums[mid] == nums[r])
+        {
+            l++;
+            r--;
+            continue;
+        }
+
         if (nums[mid] > nums[r])
         {
             l = mid + 1;
