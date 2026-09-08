@@ -26,42 +26,23 @@ int solve()
     int l = 0;
     int r = len - 1;
 
-    while (l <= r)
+    while (l < r)
     {
 
         int mid = (l + r) / 2;
 
-        if (nums[mid] == target)
+        if (nums[mid] > nums[r])
         {
-            return mid;
-        }
-
-        if (nums[l] < nums[mid])
-        {
-            if (target <= nums[mid] && target >= nums[l])
-            {
-                r = mid - 1;
-            }
-            else
-            {
-                l = mid + 1;
-            }
+            l = mid + 1;
         }
         else
         {
-            if (target >= nums[mid] && target <= nums[l])
-            {
-                l = mid + 1;
-            }
-            else
-            {
-                r = mid - 1;
-            }
+            r = mid;
         }
 
         /* code */
     }
-    return -1;
+    return nums[l];
 }
 
 signed main()
