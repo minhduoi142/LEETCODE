@@ -1,0 +1,73 @@
+class TrieNode {
+public:
+    bool isWord;
+    TrieNode* child[26];
+
+    TrieNode() {
+        isWord = false;
+        for (TrieNode*& x : child) {
+            x = nullptr;
+        }
+    }
+};
+void dfs(TrieNode*& root, int i, string word, bool& check) {
+
+    if (check == true) {
+        return;
+    }
+    if (i == word.size()) {
+        if (root->isWord) {
+            check = true;
+        }
+        return;
+    }
+    if (word[i] != '.') {
+        int temp = word[i] - 'a';
+        if (root->child[temp] != nullptr) {
+            dfs(root->child[temp], i + 1, word, check);
+        } else
+            check = false;
+    } else if (word[i] == '.') {
+        for (int j = 0; j < 26; j++) {
+            if (root->child[j] != nullptr) {
+                dfs(root->child[j], i + 1, word, check);
+            }
+        }
+    }
+}
+class WordDictionary {
+public:
+    TrieNode* root;
+    WordDictionary() { root = new TrieNode(); }
+
+    void addWord(string word) {
+        TrieNode* r = root;
+
+        for (char c : word) {
+            int i = c - 'a';
+
+            if (r->child[i] == nullptr)
+                r->child[i] = new TrieNode();
+            r = r->child[i];
+        }
+        r->isWord = true;
+    }
+
+    bool search(string word) {
+        TrieNode* r = root;
+        if (word == "") {
+            return true;
+        } else {
+            bool check = false;
+            dfs(root, 0, word, check);
+            return check;
+        }
+    }
+};
+
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary* obj = new WordDictionary();
+ * obj->addWord(word);
+ * bool param_2 = obj->search(word);
+ */

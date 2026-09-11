@@ -1,0 +1,70 @@
+class TrieNode {
+public:
+    string* wordptr;
+    TrieNode* child[26];
+
+    TrieNode() {
+        wordptr = nullptr;
+        for (TrieNode*& x : child) {
+            x = nullptr;
+        }
+    }
+    void insert(TrieNode* r, string& word) {
+
+        for (char c : word) {
+            int i = c - 'a';
+
+            if (r->child[i] == nullptr)
+                r->child[i] = new TrieNode();
+            r = r->child[i];
+        }
+        r->wordptr = &word;
+    }
+};
+
+class Solution {
+public:
+    vector<string> res;
+    void dfs(vector<vector<char>>& board, int i, int j, TrieNode* node, int n,
+             int m) {
+        if (i >= n || j >= m || i < 0 || j < 0 || board[i][j] == '#')
+            return;
+
+        char c = board[i][j];
+
+        if (!node->child[c - 'a'])
+            return;
+        node = node->child[c - 'a'];
+
+        if (node->wordptr) {
+            res.push_back(*node->wordptr);
+            node->wordptr = nullptr;
+        }
+
+        board[i][j] = '#';
+
+        dfs(board, i + 1, j, node, n, m);
+        dfs(board, i - 1, j, node, n, m);
+        dfs(board, i, j + 1, node, n, m);
+        dfs(board, i, j - 1, node, n, m);
+
+        board[i][j] = c;
+    }
+
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+
+        int n = board.size();
+        int m = board[0].size();
+        TrieNode* node = new TrieNode();
+        for (string& s : words) {
+            node->insert(node, s);
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                dfs(board, i, j, node, n, m);
+            }
+        }
+        return res;
+    }
+};
