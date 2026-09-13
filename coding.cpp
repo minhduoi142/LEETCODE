@@ -6,107 +6,83 @@
     cin.tie(NULL);
 using namespace std;
 
+vector<string> res;
+
 class TrieNode
 {
 public:
-    string *wordptr;
+    bool isNum;
     TrieNode *child[26];
-
     TrieNode()
     {
-        wordptr = nullptr;
         for (TrieNode *&x : child)
         {
+            isNum = false;
             x = nullptr;
         }
     }
-    void insert(TrieNode *r, string &word)
+
+    void insert(TrieNode *r, string word)
     {
 
         for (char c : word)
         {
-            int i = c - 'a';
+            int i = c - '0';
 
             if (r->child[i] == nullptr)
                 r->child[i] = new TrieNode();
             r = r->child[i];
         }
-        r->wordptr = &word;
+        r->isNum = true;
+    }
+
+    void dfs(TrieNode *r, string &curr)
+    {
+        if (r->isNum)
+        {
+            res.push_back(curr);
+        }
+
+        for (int i = 0; i <= 9; i++)
+        {
+            if (r->child[i] != nullptr)
+            {
+                curr.push_back('0' + i);
+                dfs(r->child[i], curr);
+                curr.pop_back();
+            }
+        }
     }
 };
 
-int n, m;
-
-vector<string> res;
-void dfs(vector<vector<char>> &board, int i, int j, TrieNode *node)
-{
-    if (i >= n || j >= m || i < 0 || j < 0 || board[i][j] == '#')
-        return;
-
-    char c = board[i][j];
-
-    if (!node->child[c - 'a'])
-        return;
-    node = node->child[c - 'a'];
-    if (node->wordptr)
-    {
-        res.push_back(*node->wordptr);
-        node->wordptr = nullptr;
-    }
-    board[i][j] = '#';
-
-    dfs(board, i + 1, j, node);
-    dfs(board, i - 1, j, node);
-    dfs(board, i, j + 1, node);
-    dfs(board, i, j - 1, node);
-
-    board[i][j] = c;
-}
-
 void solve()
 {
-    cin >> n >> m;
-    int k;
-    vector<vector<char>> board(n);
-    vector<string> words;
 
-    for (int i = 0; i < n; i++)
+    int n;
+    cin >> n;
+
+    vector<int> ve(n + 1);
+
+    TrieNode *r = new TrieNode();
+    for (int i = 1; i <= n; i++)
     {
-        for (int j = 0; j < m; j++)
-        {
-            char x;
-            cin >> x;
-
-            board[i].push_back(x);
-        }
+        r->insert(r, to_string(i));
     }
 
-    cin >> k;
-    TrieNode *node = new TrieNode();
+    string curr = "";
+    r->dfs(r, curr);
+    vector<int> ans;
 
-    for (int i = 0; i < k; i++)
+    for (const string &s : res)
     {
-        string x;
-        cin >> x;
-        words.push_back(x);
-    }
-    for (string &s : words)
-    {
-        node->insert(node, s);
+        ans.push_back(stoll(s));
     }
 
-    for (int i = 0; i < n; i++)
+    for (int x : ans)
     {
-        for (int j = 0; j < m; j++)
-        {
-            dfs(board, i, j, node);
-        }
+        cout << x << " ";
     }
 
-    for (string s : res)
-    {
-        cout << s << " ";
-    }
 }
 
 signed main()
