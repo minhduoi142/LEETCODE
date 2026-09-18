@@ -1,12 +1,6 @@
-#include <bits/stdc++.h>
-#define endl "\n"
-#define int long long
-#define CODEGOD                       \
-    ios_base::sync_with_stdio(false); \
-    cin.tie(NULL);
-using namespace std;
-
-vector<string> res;
+class Solution {
+public:
+  vector<string> res;
 unordered_set<string> vis;
 void backtrack(string &s, vector<string> &ans, string &curr)
 {
@@ -22,6 +16,7 @@ void backtrack(string &s, vector<string> &ans, string &curr)
         {
             temp.append(x + " ");
         }
+        temp.pop_back();
         res.push_back(temp);
         return;
     }
@@ -42,25 +37,8 @@ void backtrack(string &s, vector<string> &ans, string &curr)
     s.push_back(last);
     curr.pop_back();
 }
-
-void solve()
-{
-
-    string s;
-    cin >> s;
-
-    int n;
-    cin >> n;
-    vector<string> wordDict;
-
-    for (int i = 0; i < n; i++)
-    {
-        string x;
-        cin >> x;
-        wordDict.push_back(x);
-    }
-
-    for (string x : wordDict)
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        for (string x : wordDict)
     {
         vis.insert(x);
     }
@@ -70,20 +48,6 @@ void solve()
     string curr = "";
     backtrack(s, ans, curr);
 
-    for (auto x : res)
-    {
-        cout << x << endl;
+    return res;
     }
-}
-
-signed main()
-{
-    // CODEGOD;
-    int t = 1;
-    //  cin >> t;
-    while (t--)
-    {
-        /* code */
-        solve();
-    }
-}
+};
