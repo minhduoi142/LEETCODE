@@ -1,0 +1,39 @@
+class Solution {
+public:
+    vector<string> res;
+    void backtrack(string& num, int index, int target, string path, long val,
+                   long prev_chunked_val) {
+        if (index == num.size()) {
+            if (val == target) {
+                res.push_back(path);
+                return;
+            }
+            return;
+        }
+        string curr = "";
+        long curr_val = 0;
+        long len = num.size();
+        for (int j = index; j < len; j++) {
+            if (j > index && num[index] == '0')
+                return;
+            curr += num[j];
+            curr_val = curr_val * 10 + num[j] - '0';
+            if (index == 0)
+                backtrack(num, j + 1, target, path + curr, curr_val, curr_val);
+            else {
+                backtrack(num, j + 1, target, path + '+' + curr, val + curr_val,
+                          curr_val);
+                backtrack(num, j + 1, target, path + '-' + curr, val - curr_val,
+                          -curr_val);
+                backtrack(num, j + 1, target, path + '*' + curr,
+                          val - prev_chunked_val + prev_chunked_val * curr_val,
+                          prev_chunked_val * curr_val);
+            }
+        }
+    }
+    vector<string> addOperators(string num, int target) {
+        string path = "";
+        backtrack(num, 0, target, path, 0, 0);
+        return res;
+    }
+};
