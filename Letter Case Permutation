@@ -1,0 +1,29 @@
+class Solution {
+public:
+    vector<string> res;
+    void backtrack(string& s, int i, string& curr) {
+        if (i == s.size()) {
+            res.push_back(curr);
+            return;
+        }
+
+        if (isalpha(s[i])) {
+            curr.push_back(tolower(s[i]));
+            backtrack(s, i + 1, curr);
+            curr.pop_back();
+
+            curr.push_back(toupper(s[i]));
+            backtrack(s, i + 1, curr);
+            curr.pop_back();
+        } else {
+            curr.push_back(s[i]);
+            backtrack(s, i + 1, curr);
+            curr.pop_back();
+        }
+    }
+    vector<string> letterCasePermutation(string s) {
+        string curr = "";
+        backtrack(s, 0, curr);
+        return res;
+    }
+};
