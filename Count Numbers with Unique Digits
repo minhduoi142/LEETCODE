@@ -1,10 +1,5 @@
-#include <bits/stdc++.h>
-#define endl "\n"
-#define int long long
-#define CODEGOD                       \
-    ios_base::sync_with_stdio(false); \
-    cin.tie(NULL);
-using namespace std;
+class Solution {
+public:
 
 int res = 0;
 
@@ -16,7 +11,7 @@ void backtrack(int index, string curr, int n, vector<int> &vis)
     }
 
     res++;
-    cout << curr << endl;
+    // cout << curr << endl;
 
     for (int i = 0; i <= 9; i++)
     {
@@ -43,28 +38,15 @@ void backtrack(int index, string curr, int n, vector<int> &vis)
         }
     }
 }
-
-void solve()
-{
-    int n;
-    cin >> n;
-    vector<int> vis(10, 0);
+    int countNumbersWithUniqueDigits(int n) {
+        if(n == 0){
+            return 1;
+        }
+                vector<int> vis(10, 0);
     string curr = "";
 
 
     backtrack(0, curr, n, vis);
-    // res += 9;
-    cout << res;
-}
-
-signed main()
-{
-    CODEGOD;
-    int t = 1;
-    //  cin >> t;
-    while (t--)
-    {
-        /* code */
-        solve();
+    return res;
     }
-}
+};
