@@ -8,52 +8,41 @@ using namespace std;
 
 int res = 0;
 
-void backtrack(int index, string curr, int n, vector<int> &vis)
+void backtrack(vector<int> &nums, int index, int curr, int target)
 {
-    if (index >= n)
+
+    if (index == nums.size())
     {
+        if (curr == target)
+        {
+            res++;
+        }
         return;
     }
 
-    res++;
-    cout << curr << endl;
-
-    for (int i = 0; i <= 9; i++)
-    {
-        if (index == 0)
-        {
-            if(i == 0 && !curr.size()){
-                continue;
-            }
-        }
-        if (vis[i] == 0)
-        {
-            if (curr.size() == 0)
-            {
-                vis[i] = 1;
-                backtrack(index, curr + char('0' + i), n, vis);
-                vis[i] = 0;
-            }
-            else
-            {
-                vis[i] = 1;
-                backtrack(index + 1, curr + char('0' + i), n, vis);
-                vis[i] = 0;
-            }
-        }
-    }
+    backtrack(nums, index + 1, curr + nums[index], target);
+    backtrack(nums, index + 1, curr - nums[index], target);
 }
 
 void solve()
 {
+
+    vector<int> nums;
+    int target;
     int n;
     cin >> n;
-    vector<int> vis(10, 0);
-    string curr = "";
 
+    for (int i = 0; i < n; i++)
+    {
+        int x;
+        cin >> x;
+        nums.push_back(x);
+    }
 
-    backtrack(0, curr, n, vis);
-    // res += 9;
+    cin >> target;
+
+    backtrack(nums, 0, 0, target);
+
     cout << res;
 }
 
