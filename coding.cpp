@@ -6,44 +6,77 @@
     cin.tie(NULL);
 using namespace std;
 
-int res = 0;
+struct ListNode
+{
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
 
-void backtrack(vector<int> &nums, int index, int curr, int target)
+ListNode *remove_duplicate(ListNode *&head)
 {
 
-    if (index == nums.size())
+    ListNode dummy(0, head);
+    ListNode *prev = &dummy;
+    ListNode *curr = head;
+
+    while (head->next != nullptr)
     {
-        if (curr == target)
+        if (head->val == head->next->val)
         {
-            res++;
+            while (head->next != nullptr && head->val == head->next->val)
+            {
+                head = head->next;
+                /* code */
+            }
         }
-        return;
+        else
+        {
+            prev = head;
+        }
+        prev->next = head->next;
+        head = head->next;
+        /* code */
     }
 
-    backtrack(nums, index + 1, curr + nums[index], target);
-    backtrack(nums, index + 1, curr - nums[index], target);
+    return dummy.next;
 }
 
 void solve()
 {
 
-    vector<int> nums;
-    int target;
     int n;
     cin >> n;
+    ListNode *head = nullptr;
+    ListNode *root = nullptr;
 
     for (int i = 0; i < n; i++)
     {
         int x;
         cin >> x;
-        nums.push_back(x);
+
+        if (head == nullptr)
+        {
+            head = new ListNode(x);
+            root = head;
+        }
+        else
+        {
+            root->next = new ListNode(x);
+            root = root->next;
+        }
     }
 
-    cin >> target;
+    head = remove_duplicate(head);
 
-    backtrack(nums, 0, 0, target);
-
-    cout << res;
+    while (head != nullptr)
+    {
+        cout << head->val << " ";
+        head = head->next;
+        /* code */
+    }
 }
 
 signed main()
