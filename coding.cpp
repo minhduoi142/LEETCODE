@@ -6,77 +6,79 @@
     cin.tie(NULL);
 using namespace std;
 
-struct ListNode
-{
-    int val;
-    ListNode *next;
-    ListNode() : val(0), next(nullptr) {}
-    ListNode(int x) : val(x), next(nullptr) {}
-    ListNode(int x, ListNode *next) : val(x), next(next) {}
-};
+int vis[20][20] = {0};
+int res = 0;
+bool start = true;
 
-ListNode *remove_duplicate(ListNode *&head)
+void backtrack(int i, int j, int m, int n, int m_target, int n_target, vector<vector<int>> &grid)
 {
 
-    ListNode dummy(0, head);
-    ListNode *prev = &dummy;
-    ListNode *curr = head;
-
-    while (head->next != nullptr)
+    if (i < 0 || j < 0 || i >= n || j >= m || grid[i][j] == -1)
     {
-        if (head->val == head->next->val)
+        return;
+    }
+    if (i == n_target && j == m_target)
+    {
+        for (int l = 0; l < n; l++)
         {
-            while (head->next != nullptr && head->val == head->next->val)
+            for (int k = 0; k < m; k++)
             {
-                head = head->next;
-                /* code */
+                if (grid[l][k] == 0)
+                {
+                    return;
+                }
             }
         }
-        else
-        {
-            prev = head;
-        }
-        prev->next = head->next;
-        head = head->next;
-        /* code */
-    }
 
-    return dummy.next;
+        res++;
+        return;
+    }
+    start = false;
+
+    int temp = grid[i][j];
+    grid[i][j] = -1;
+
+    backtrack(i + 1, j, m, n, m_target, n_target, grid);
+    backtrack(i, j + 1, m, n, m_target, n_target, grid);
+    backtrack(i - 1, j, m, n, m_target, n_target, grid);
+    backtrack(i, j - 1, m, n, m_target, n_target, grid);
+
+    grid[i][j] = temp;
 }
 
 void solve()
 {
 
-    int n;
-    cin >> n;
-    ListNode *head = nullptr;
-    ListNode *root = nullptr;
+    int m, n;
 
+    cin >> m >> n;
+    vector<vector<int>> grid(n);
+    int m_target;
+    int n_target;
+    int x, y;
     for (int i = 0; i < n; i++)
     {
-        int x;
-        cin >> x;
+        for (int j = 0; j < m; j++)
+        {
 
-        if (head == nullptr)
-        {
-            head = new ListNode(x);
-            root = head;
-        }
-        else
-        {
-            root->next = new ListNode(x);
-            root = root->next;
+            int temp;
+            cin >> temp;
+
+            grid[i].push_back(temp);
+            if (grid[i][j] == 1)
+            {
+                x = i, y = j;
+            };
+            if (grid[i][j] == 2)
+            {
+                n_target = i;
+                m_target = j;
+            }
         }
     }
 
-    head = remove_duplicate(head);
-
-    while (head != nullptr)
-    {
-        cout << head->val << " ";
-        head = head->next;
-        /* code */
-    }
+    backtrack(x, y, m, n, m_target, n_target, grid);
+    cout << res;
 }
 
 signed main()

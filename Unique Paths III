@@ -1,0 +1,58 @@
+class Solution {
+public:
+    int res = 0;
+    bool start = true;
+
+    void backtrack(int i, int j, int m, int n, int m_target, int n_target,
+                   vector<vector<int>>& grid) {
+
+        if (i < 0 || j < 0 || i >= n || j >= m || grid[i][j] == -1) {
+            return;
+        }
+        if (i == n_target && j == m_target) {
+            for (int l = 0; l < n; l++) {
+                for (int k = 0; k < m; k++) {
+                    if (grid[l][k] == 0) {
+                        return;
+                    }
+                }
+            }
+
+            res++;
+            return;
+        }
+        start = false;
+
+        int temp = grid[i][j];
+        grid[i][j] = -1;
+
+        backtrack(i + 1, j, m, n, m_target, n_target, grid);
+        backtrack(i, j + 1, m, n, m_target, n_target, grid);
+        backtrack(i - 1, j, m, n, m_target, n_target, grid);
+        backtrack(i, j - 1, m, n, m_target, n_target, grid);
+
+        grid[i][j] = temp;
+    }
+    int uniquePathsIII(vector<vector<int>>& grid) {
+        int m = grid[0].size();
+        int n = grid.size();
+
+        int m_target;
+        int n_target;
+        int x, y;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 1) {
+                    x = i, y = j;
+                };
+                if (grid[i][j] == 2) {
+                    n_target = i;
+                    m_target = j;
+                }
+            }
+        }
+
+        backtrack(x, y, m, n, m_target, n_target, grid);
+        return res;
+    }
+};
