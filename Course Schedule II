@@ -1,0 +1,55 @@
+class Solution {
+public:
+    int vis[2005];
+    int inSt[2005];
+    vector<int> res;
+
+    bool hasCycle(int curr, vector<vector<int>>& g) {
+
+        vis[curr] = 1;
+        inSt[curr] = 1;
+
+        for (int x : g[curr]) {
+
+            if (inSt[x] == 1) {
+                return true;
+            }
+
+            if (vis[x] == 0) {
+                if (hasCycle(x, g)) {
+                    return true;
+                }
+            }
+        }
+
+        inSt[curr] = 0;
+        res.push_back(curr);
+        return false;
+    }
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+
+        vector<vector<int>> g(numCourses + 1);
+
+        for (vector<int> ve : prerequisites) {
+            g[ve[1]].push_back(ve[0]);
+        }
+
+        for (auto x : g) {
+            for (auto y : x) {
+                cout << y << " ";
+            }
+            cout << endl;
+        }
+
+        for (int i = 0; i < numCourses; i++) {
+            if (!vis[i]) {
+                if (hasCycle(i, g)) {
+                    return {};
+                }
+            }
+        }
+        reverse(res.begin(), res.end());
+
+        return res;
+    }
+};

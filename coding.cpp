@@ -6,79 +6,57 @@
     cin.tie(NULL);
 using namespace std;
 
-int vis[20][20] = {0};
-int res = 0;
-bool start = true;
+int vis[2000];
 
-void backtrack(int i, int j, int m, int n, int m_target, int n_target, vector<vector<int>> &grid)
+void dfs(int curr, vector<vector<int>> &g)
 {
+    cout << curr << " ";
 
-    if (i < 0 || j < 0 || i >= n || j >= m || grid[i][j] == -1)
+    if (vis[curr] == 0)
     {
-        return;
-    }
-    if (i == n_target && j == m_target)
-    {
-        for (int l = 0; l < n; l++)
+        vis[curr] = 1;
+        for (int x : g[curr])
         {
-            for (int k = 0; k < m; k++)
-            {
-                if (grid[l][k] == 0)
-                {
-                    return;
-                }
-            }
+            if (!vis[x])
+                dfs(x, g);
         }
-
-        res++;
-        return;
     }
-    start = false;
-
-    int temp = grid[i][j];
-    grid[i][j] = -1;
-
-    backtrack(i + 1, j, m, n, m_target, n_target, grid);
-    backtrack(i, j + 1, m, n, m_target, n_target, grid);
-    backtrack(i - 1, j, m, n, m_target, n_target, grid);
-    backtrack(i, j - 1, m, n, m_target, n_target, grid);
-
-    grid[i][j] = temp;
 }
 
 void solve()
 {
 
-    int m, n;
-
+    int numCourse;
+    int n, m;
+    cin >> numCourse;
     cin >> m >> n;
-    vector<vector<int>> grid(n);
-    int m_target;
-    int n_target;
-    int x, y;
+
+    vector<vector<int>> prerequisites;
+
+    vector<vector<int>> g(n + 1);
+
     for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < m; j++)
-        {
-
-            int temp;
-            cin >> temp;
-
-            grid[i].push_back(temp);
-            if (grid[i][j] == 1)
-            {
-                x = i, y = j;
-            };
-            if (grid[i][j] == 2)
-            {
-                n_target = i;
-                m_target = j;
-            }
-        }
+        int a, b;
+        cin >> a >> b;
+        prerequisites.push_back({a, b});
     }
 
-    backtrack(x, y, m, n, m_target, n_target, grid);
-    cout << res;
+    for (int i = 0; i < n; i++)
+    {
+        g[prerequisites[i][1]].push_back(prerequisites[i][0]);
+    }
+
+    for (vector<int> x : g)
+    {
+        for (int y : x)
+        {
+            cout << y << " ";
+        }
+        cout << endl;
+    }
+
+    dfs(0, g);
 }
 
 signed main()
