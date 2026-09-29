@@ -1,0 +1,60 @@
+class Solution {
+public:
+    int parent[1005];
+
+    int find(int u) {
+        if (parent[u] == u) {
+            return u;
+        }
+        return parent[u] = find(parent[u]);
+    }
+
+    bool unite(int u, int v) {
+
+        int rootU = find(u);
+        int rootV = find(v);
+
+        if (rootU == rootV) {
+            return false;
+        } else {
+            parent[rootU] = rootV;
+            return true;
+        }
+    }
+
+    vector<int> findRedundantDirectedConnection(vector<vector<int>>& edges) {
+
+        vector<int> edge1;
+        vector<int> edge2;
+
+        int n = edges.size();
+
+        int inDeg[1005] = {0};
+        for (int i = 0; i <= n; i++) {
+            parent[i] = i;
+        }
+
+        for (vector<int> ve : edges) {
+            if (inDeg[ve[1]] > 0) {
+                edge1 = {inDeg[ve[1]], ve[1]};
+                edge2 = ve;
+            } else {
+                inDeg[ve[1]] = ve[0];
+            }
+        }
+
+        for (vector<int> ve : edges) {
+            if (ve == edge2)
+                continue;
+
+            if (!unite(ve[0], ve[1])) {
+                if (!edge1.empty())
+                    return edge1;
+                else
+                    return ve;
+            }
+        }
+
+        return edge2;
+    }
+};
