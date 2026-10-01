@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int vis[20];
+    int inSt[20];
+    vector<vector<int>> res;
+
+    void dfs(int curr, vector<vector<int>>& g, vector<int>& currPath, int n) {
+
+        vis[curr] = 1;
+        if (curr == n - 1) {
+            res.push_back(currPath);
+        }
+        for (int x : g[curr]) {
+            if (!vis[x]) {
+                currPath.push_back(x);
+                dfs(x, g, currPath, n);
+                currPath.pop_back();
+            }
+        }
+
+        vis[curr] = 0;
+    }
+
+    vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
+
+        vector<int> currPath = {0};
+        int n = graph.size();
+        dfs(0, graph, currPath, n);
+        return res;
+    }
+};
