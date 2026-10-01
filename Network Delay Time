@@ -1,0 +1,61 @@
+class Solution {
+public:
+    struct node {
+        int v;
+        int w;
+    };
+
+    int networkDelayTime(vector<vector<int>>& times, int n, int k) {
+
+        if (n == 1) {
+            return 0;
+        }
+        int dist[105];
+
+        for (int i = 0; i <= n; i++) {
+            dist[i] = 1e9;
+        }
+        vector<vector<node>> g(n + 5);
+
+        for (vector<int> ve : times) {
+            g[ve[0]].push_back({ve[1], ve[2]});
+        }
+
+        queue<pair<int, long long>> q;
+
+        q.push({k, 0});
+        dist[k] = 0;
+
+        while (!q.empty()) {
+
+            pair<int, long long> curr = q.front();
+            q.pop();
+
+            for (node x : g[curr.first]) {
+
+                if (dist[curr.first] + x.w < dist[x.v]) {
+                    dist[x.v] = dist[curr.first] + x.w;
+                    q.push({x.v, dist[x.v]});
+                }
+            }
+        }
+
+        for (int i = 1; i <= n; i++) {
+            cout << dist[i] << endl;
+        }
+
+        int Max = -1;
+        for (int i = 1; i <= n; i++) {
+            if (Max < dist[i] && i != k && dist[i] < 1e9) {
+                Max = dist[i];
+            }
+            else if(dist[i] == 1e9){
+                return -1;
+            }
+        }
+        if (Max != -1)
+            return Max;
+        else 
+            return -1;
+    }
+};
