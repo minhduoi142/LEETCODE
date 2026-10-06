@@ -1,0 +1,43 @@
+class Solution {
+public:
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        
+        vector<vector<int>> g(numCourses + 1);
+        int inDeg[2001] = {0};
+
+        for( vector<int> &ve : prerequisites){
+            g[ve[1]].push_back(ve[0]);
+            inDeg[ve[0]] ++;
+        }
+
+        queue<int> q;
+
+        for( int i = 0 ; i < numCourses; i++){
+            if(inDeg[i] == 0){
+                q.push(i);
+            }
+        }
+        vector<int> topo;
+        while(!q.empty()){
+
+            int curr = q.front();
+            q.pop();
+            topo.push_back(curr);
+
+            for( int x : g[curr]){
+                inDeg[x] --;
+                if(inDeg[x] == 0){
+                    q.push(x);
+                }
+            }
+
+        }
+
+        if(topo.size() == numCourses){
+            return topo;
+        }
+        else {
+            return {};
+        }
+    }
+};
