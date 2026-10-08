@@ -1,0 +1,51 @@
+class Solution {
+public:
+    vector<bool> checkIfPrerequisite(int numCourses, vector<vector<int>>& prerequisites, vector<vector<int>>& queries) {
+
+        vector<vector<int>> g(numCourses);
+        vector<unordered_set<int>> pre(numCourses);
+        int inDeg[101] = {0};
+        queue<int> q;
+        for( vector<int> &ve : prerequisites){
+
+            g[ve[0]].push_back(ve[1]);
+            pre[ve[1]].insert(ve[0]);
+            inDeg[ve[1]] ++;
+        }
+
+        for( int i = 0 ; i < numCourses; i++){
+            if(inDeg[i] == 0){
+                q.push(i);
+            }
+        }
+
+        while(!q.empty()){
+            int curr = q.front();
+            q.pop();
+
+            for( int &x : g[curr]){
+                for( int i : pre[curr]){
+                    pre[x].insert(i);
+                }
+
+                inDeg[x] --;
+                if(inDeg[x] == 0){
+                    q.push(x);
+                }
+            }
+        }
+
+        vector<bool> res;
+        for( vector<int> &ve : queries){
+            if(pre[ve[1]].count(ve[0])){
+                res.push_back(true);
+            }
+            else{
+                res.push_back(false);
+            }
+        }
+
+        return res;
+        
+    }
+};
