@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int scheduleCourse(vector<vector<int>>& courses) {
+        sort(courses.begin(), courses.end(), [](const vector<int>& a, const vector<int>& b) {
+            return a[1] < b[1];
+        });
+
+        priority_queue<int> pq;
+
+        int timeCurr = 0;
+        for( vector<int> &ve : courses){
+            
+            int dur = ve[0];
+            int dl = ve[1];
+
+            pq.push(dur);
+            timeCurr += dur;
+            if(timeCurr > dl){
+                int temp = pq.top();
+                pq.pop();
+                timeCurr -= temp;
+            }
+
+        }
+
+        return pq.size();
+        
+    }
+};
