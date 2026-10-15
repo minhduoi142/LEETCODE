@@ -1,0 +1,69 @@
+class NumArray {
+public:
+    int n;
+    vector<int> st;
+    vector<int> v;
+
+    void buildSt(int index, int l, int r, vector<int>& nums) {
+        if (l == r) {
+            st[index] = nums[l];
+        } else {
+            int m = (l + r) / 2;
+            buildSt(index * 2, l, m, nums);
+            buildSt(index * 2 + 1, m + 1, r, nums);
+
+            st[index] = st[index * 2] + st[index * 2 + 1];
+        }
+    }
+
+    void updateSt(int index, int l, int r, int pos, int val) {
+
+        if (l == r) {
+            st[index] = val;
+        } else {
+            int m = (l + r) / 2;
+
+            if (pos <= m) {
+                updateSt(index * 2, l, m, pos, val);
+            } else {
+                updateSt(index * 2 + 1, m + 1, r, pos, val);
+            }
+
+            st[index] = st[index * 2] + st[index * 2 + 1];
+        }
+    }
+
+    int sumR(int index, int tl, int tr, int l, int r) {
+
+        if (l > r) {
+            return 0;
+        } else if (tr == r && tl == l) {
+            return st[index];
+        } else {
+
+            int m = (tl + tr) / 2;
+
+            int s1 = sumR(index * 2, tl, m, l, min(m, r));
+            int s2 = sumR(index * 2 + 1, m + 1, tr, max(l, m + 1), r);
+
+            return s1 + s2;
+        }
+    }
+
+    NumArray(vector<int>& nums) {
+        n = nums.size();
+        st.assign(4 * n, 0);
+        buildSt(1, 0, n - 1, nums);
+    }
+
+    void update(int index, int val) { updateSt(1, 0, n - 1, index, val); }
+
+    int sumRange(int left, int right) { return sumR(1, 0, n - 1, left, right); }
+};
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray* obj = new NumArray(nums);
+ * obj->update(index,val);
+ * int param_2 = obj->sumRange(left,right);
+ */

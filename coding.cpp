@@ -5,63 +5,49 @@
     ios_base::sync_with_stdio(false); \
     cin.tie(NULL);
 using namespace std;
+int v[1000];
+int segTree[1000];
 
-int vis[2000];
-
-void dfs(int curr, vector<vector<int>> &g)
+void buildSegTree(int index, int l, int r)
 {
-    cout << curr << " ";
-
-    if (vis[curr] == 0)
+    if (l == r)
     {
-        vis[curr] = 1;
-        for (int x : g[curr])
-        {
-            if (!vis[x])
-                dfs(x, g);
-        }
+        segTree[index] = v[l];
+    }
+    else
+    {
+
+        int m = (l + r) / 2;
+
+        buildSegTree(index * 2, l, m);
+        buildSegTree(index * 2 + 1, m + 1, r);
+
+        segTree[index] = segTree[index * 2] + segTree[index * 2 + 1];
     }
 }
 
 void solve()
 {
+    int n;
 
-    int numCourse;
-    int n, m;
-    cin >> numCourse;
-    cin >> m >> n;
-
-    vector<vector<int>> prerequisites;
-
-    vector<vector<int>> g(n + 1);
+    cin >> n;
 
     for (int i = 0; i < n; i++)
     {
-        int a, b;
-        cin >> a >> b;
-        prerequisites.push_back({a, b});
+        cin >> v[i];
     }
 
-    for (int i = 0; i < n; i++)
+    buildSegTree(1, 0, n - 1);
+
+    for (int i = 1; i <= n * 4; i++)
     {
-        g[prerequisites[i][1]].push_back(prerequisites[i][0]);
+        cout << segTree[i] << " ";
     }
-
-    for (vector<int> x : g)
-    {
-        for (int y : x)
-        {
-            cout << y << " ";
-        }
-        cout << endl;
-    }
-
-    dfs(0, g);
 }
 
 signed main()
 {
-    CODEGOD;
+    // CODEGOD;
     int t = 1;
     //  cin >> t;
     while (t--)
